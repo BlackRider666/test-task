@@ -17,7 +17,7 @@
                     <hr>
                     @foreach($sezon->epizods as $epizod)
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md">
                             <a href="{{route('epizod.show',$epizod->id)}}"><img src="{{asset('storage/'.$epizod->logo_path)}}" width="150px"></a>
                         </div>
                     </div>

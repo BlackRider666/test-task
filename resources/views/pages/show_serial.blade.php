@@ -18,7 +18,7 @@
                     <hr>
                     @foreach($serial->sezons as $sezon)
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md">
                             <a href="{{route('sezon.show',$sezon->id)}}"><img src="{{asset('storage/'.$sezon->logo_path)}}" width="150px"></a>
                         </div>
                     </div>
