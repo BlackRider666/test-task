@@ -12,7 +12,7 @@
                         @foreach($serials as $serial)
                         <a href="{{route('serial.show',$serial->id)}}">
                             <div class="col-md-3">
-                                <img src="{{asset('storage/'.$serial->logo_path)}}" width="100%">
+                                <img src="{{asset('storage/'.$serial->logo_path)}}" width="150px">
                                 <p>{{ $serial->name}}</p>
                             </div>
                         </a>
