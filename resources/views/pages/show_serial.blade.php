@@ -9,7 +9,7 @@
 
                 <div class="card-body">
                     <h1>{{$serial->name}}</h1>
-                    <img src="{{asset('storage/'.$serial->logo_path)}}" width="50%">
+                    <img src="{{asset('storage/'.$serial->logo_path)}}" width="150px">
                     <p>{{$serial->start}}</p>
                     <p>{{$serial->desc}}</p>
                     <hr>
@@ -19,7 +19,7 @@
                     @foreach($serial->sezons as $sezon)
                     <div class="row">
                         <div class="col-md-4">
-                            <a href="{{route('sezon.show',$sezon->id)}}"><img src="{{asset('storage/'.$sezon->logo_path)}}" width="100%"></a>
+                            <a href="{{route('sezon.show',$sezon->id)}}"><img src="{{asset('storage/'.$sezon->logo_path)}}" width="150px"></a>
                         </div>
                     </div>
                     @endforeach

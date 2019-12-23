@@ -9,7 +9,7 @@
 
                 <div class="card-body">
                     <h1>{{$epizod->name}}</h1>
-                    <img src="{{asset('storage/'.$epizod->logo_path)}}" width="50%">
+                    <img src="{{asset('storage/'.$epizod->logo_path)}}" width="150px">
                     <p>{{$epizod->release}}</p>
                     <p>{{$epizod->desc}}</p>
                     <hr>

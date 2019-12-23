@@ -8,7 +8,7 @@
                 <div class="card-header">Sezon {{$sezon->serial->name}}</div>
 
                 <div class="card-body">
-                    <img src="{{asset('storage/'.$sezon->logo_path)}}" width="50%">
+                    <img src="{{asset('storage/'.$sezon->logo_path)}}" width="150px">
                     <p>{{$sezon->start}} -- {{$sezon->finish}}</p>
                     <p>{{$sezon->desc}}</p>
                     <hr>
@@ -18,7 +18,7 @@
                     @foreach($sezon->epizods as $epizod)
                     <div class="row">
                         <div class="col-md-4">
-                            <a href="{{route('epizod.show',$epizod->id)}}"><img src="{{asset('storage/'.$epizod->logo_path)}}" width="100%"></a>
+                            <a href="{{route('epizod.show',$epizod->id)}}"><img src="{{asset('storage/'.$epizod->logo_path)}}" width="150px"></a>
                         </div>
                     </div>
                     @endforeach
