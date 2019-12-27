@@ -5,14 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Sezon;
 use Validator;
+use Image;
 class SezonController extends Controller
 {
-    public function create($id)
-    {
-    	return view('pages.create_sezon',[
-    		'serial_id'	=>	$id,
-    	]);
-    }
     public function store(Request $request)
     {
     	$request->validate([
@@ -23,21 +18,33 @@ class SezonController extends Controller
 	        'serial_id'	=>	'required|integer'
     	]);
     	$filename = sha1(uniqid()).'.'.$request->file('logo')->getClientOriginalExtension();
-    	$path = $request->file('logo')->storeAs('public',$filename);
+        $img = Image::make($request->file('logo'));
+        $img->resize(null, 300, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $path = '/img/sezon/'.$filename;
+        $img->save(public_path($path));
     	$sezon = Sezon::create([
-    		'logo_path'	=>	$filename,
+    		'logo_path'	=>	$path,
     		'desc'		=>	$request->get('desc'),
     		'start'		=>	$request->get('start'),
     		'finish'	=>	$request->get('finish'),
     		'serial_id'	=>	$request->get('serial_id')
     	]);
-    	return redirect()->route('sezon.show',$sezon->getKey());
+    	return response()->json($sezon,200);
     }
-    public function show($id)
+    public function getSezon($id)
     {
-    	$sezon = Sezon::find($id);
-    	return view('pages.show_sezon',[
-    		'sezon'	=>	$sezon,
-    	]);
+        $sezon = Sezon::find($id);
+        if(isset($sezon->epizods))
+        {
+            $epizods = $sezon->epizods;
+        } else {
+            $epizods = null;
+        }
+        return response()->json([
+            'sezon' => $sezon,
+            'epizods' => $epizods,
+        ],200);
     }
 }
