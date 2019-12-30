@@ -28,7 +28,7 @@
                     </form>
                     <hr>
                     <div class="row">
-                        <div class="col-md" v-for="epizod in epizods">
+                        <div class="col-md" v-for="epizod in getEpizods">
                           <router-link :to="{ name: 'epizod_show', params: { id: epizod.id }}" class="nav-link"><img :src="epizod.logo_path" width="150px"><p>{{epizod.name}}</p></router-link>
                         </div>
                     </div>
@@ -39,32 +39,24 @@
 </div>
 </template>
 <script>
-import axios from 'axios';
+import {mapGetters} from 'vuex';
 export default {
   props:['id'],
   data() {
     return {
-      epizods:null,
       name:'',
       logo:'',
       desc:'',
       release:'',
     };
   },
-  created() {
-    this.fetchData();
+  computed: mapGetters(['getEpizods']),
+  mounted(){
+    this.$store.commit('changeLoading');
+    this.$store.dispatch('getSezon',this.id);
+    this.$store.commit('changeLoading');
   },
   methods: {
-    fetchData() {
-      this.error = this.epizods = null;
-      this.loading = true;
-      axios
-        .get('/api/sezon/'+this.id+'/epizods')
-        .then(response => {
-          this.loading = false;
-          this.epizods = response.data.epizods;
-        });
-    },
     handleFileUpload(){
       this.logo = this.$refs.file.files[0];
     },
@@ -75,16 +67,7 @@ export default {
       data.append('desc', this.desc);
       data.append('release', this.release);
       data.append('sezon_id', this.id);
-      axios.post('/api/epizod/store',
-          data,
-          {
-          headers: {
-              'Content-Type': 'multipart/form-data'
-          }
-        }
-      ).then(response => {
-        this.epizods.push(response.data);
-      });
+      this.$store.dispatch('addEpizod',data);
     }
   }
 }

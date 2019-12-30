@@ -3,17 +3,17 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Sezon {{sezon.name}}</div>
+                <div class="card-header">Sezon {{getSezon.name}}</div>
 
                 <div class="card-body">
-                    <img :src="sezon.logo_path" width="150px">
-                    <p>{{sezon.start}} -- {{sezon.finish}}</p>
-                    <p>{{sezon.desc}}</p>
+                    <img :src="getSezon.logo_path" width="150px">
+                    <p>{{getSezon.start}} -- {{getSezon.finish}}</p>
+                    <p>{{getSezon.desc}}</p>
                     <hr>
                     <h3>Epizods</h3>
                     <hr>
                     <div class="row">
-                        <div class="col-md" v-for="epizod in epizods">
+                        <div class="col-md" v-for="epizod in getEpizods">
                             <router-link :to="{ name: 'epizod_show', params: { id: epizod.id }}" class="nav-link"><img :src="epizod.logo_path" width="150px"><p>{{epizod.name}}</p></router-link>
                         </div>
                     </div>
@@ -25,32 +25,14 @@
 </div>
 </template>
 <script>
-import axios from 'axios';
+import {mapGetters} from 'vuex';
 export default {
   props:['id'],
-  data() {
-    return {
-      loading: false,
-      sezon: {},
-      epizods: null,
-      error: null,
-    };
-  },
-  created() {
-    this.fetchData();
-  },
-  methods: {
-    fetchData() {
-      this.error = this.epizods = null;
-      this.loading = true;
-      axios
-        .get('/api/sezon/'+this.id+'/epizods')
-        .then(response => {
-          this.loading = false;
-          this.sezon = response.data.sezon;
-          this.epizods = response.data.epizods;
-        });
-    }
+  computed: mapGetters(['getSezon','getEpizods']),
+  mounted(){
+    this.$store.commit('changeLoading');
+    this.$store.dispatch('getSezon',this.id);
+    this.$store.commit('changeLoading');
   }
 }
 </script>

@@ -7,7 +7,7 @@
 
                 <div class="card-body">
                     <div class="row">
-                    	<div v-for="serial in serials">
+                    	<div v-for="serial in allSerials">
                         <router-link :to="{ name: 'serial_show', params: { id: serial.id }}" class="nav-link">
                             <div class="col-md">
                                 <img :src="serial.logo_path" width="150px">
@@ -23,29 +23,13 @@
 </div>
 </template>
 <script>
-import axios from 'axios';
+import {mapGetters} from 'vuex';
 export default {
-  data() {
-    return {
-      loading: false,
-      serials: null,
-      error: null,
-    };
-  },
-  created() {
-    this.fetchData();
-  },
-  methods: {
-    fetchData() {
-      this.error = this.serials = null;
-      this.loading = true;
-      axios
-        .get('/api/serials')
-        .then(response => {
-          this.loading = false;
-          this.serials = response.data;
-        });
-    }
+  computed: mapGetters(['allSerials']),
+  mounted(){
+    this.$store.commit('changeLoading');
+    this.$store.dispatch('fetchSerials');
+    this.$store.commit('changeLoading');
   }
 }
 </script>

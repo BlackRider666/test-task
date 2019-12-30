@@ -8,26 +8,25 @@
                     <ul class="navbar-nav mr-auto">
 
                     </ul>
-                    <div v-if="!app.user">
+                    <div v-if="!loggedIn">
 	                    <!-- Right Side Of Navbar -->
 	                    <ul class="navbar-nav ml-auto">
 	                    	
 	                            <li class="nav-item">
-                                    <router-link to="/login" class="nav-link">Login</router-link>
+                                    <router-link :to="{name:'login'}" class="nav-link">Login</router-link>
 	                            </li>
 	                    </ul>
                     </div>
-                    <div v-else>
+                    <div v-if="loggedIn">
                     	<ul class="navbar-nav ml-auto">
                     		<li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
-                                    {{app.user.name}} <span class="caret"></span>
+                                    Admin <span class="caret"></span>
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" @click="logout()">
-                                        Logout
-                                    </a>
+                                    <router-link :to="{name:'admin'}" class="nav-link">Admin-panel</router-link>
+                                    <router-link :to="{name:'logout'}" class="nav-link">Logout</router-link>
                                 </div>
                             </li>
                     	</ul>
@@ -40,21 +39,16 @@
 import axios from 'axios';
 export default {
   name:'navbar',
-  props:['app'],
-  data() {
-    return {
-    };
-  },
-  methods:{
-    logout(){
-        const data = {
-            token:localStorage.token,
-          }
-        axios.post('/api/auth/logout/',data)
-        .then(response => {
-          this.app.user = null;
-        });
+  computed:{
+    loggedIn()
+    {
+        return this.$store.getters.loggedIn
     }
   }
 }
 </script>
+<style>
+.dropdown-item{
+    cursor:pointer;
+}
+</style>   

@@ -28,7 +28,7 @@
                     </form>
                     <hr>
                     <div class="row">
-                      <div v-for="serial in serials">
+                      <div v-for="serial in allSerials">
                         <router-link :to="{ name: 'admin_sezons', params: { id: serial.id }}" class="nav-link">
                             <div class="col-md">
                                 <img :src="serial.logo_path" width="150px">
@@ -44,29 +44,25 @@
 </div>
 </template>
 <script>
-import axios from 'axios';
+import {mapGetters} from 'vuex';
 export default {
+  computed: mapGetters(['allSerials']),
   data() {
     return {
-      serials:[],
       name:'',
       logo:'',
       desc:'',
       start:'',
-    };
+    }
   },
-  created() {
-    this.fetchData();
+  mounted(){
+    this.$store.commit('changeLoading');
+    this.$store.dispatch('fetchSerials');
+    this.$store.commit('changeLoading');
   },
   methods: {
     handleFileUpload(){
       this.logo = this.$refs.file.files[0];
-    },
-    fetchData(){
-      axios.get('/api/serials')
-        .then(response => {
-          this.serials = response.data;
-        });
     },
     submitAddSerial(){
       var data = new FormData();
@@ -74,16 +70,7 @@ export default {
       data.append('name', this.name);
       data.append('desc', this.desc);
       data.append('start', this.start);
-      axios.post('/api/serial/store',
-          data,
-          {
-          headers: {
-              'Content-Type': 'multipart/form-data'
-          }
-        }
-      ).then(response => {
-        this.serials.push(response.data);
-      });
+      this.$store.dispatch('addSerial',data);
     }
   }
 }

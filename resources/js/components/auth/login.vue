@@ -39,29 +39,24 @@
 <script>
 export default {
   name:"login",
-  props:['app'],
   data(){
     return {
       email: '',
-      password:'',
-      errors:[],
+      password:''
     }
   },
   methods:{
     onSubmit(){
-      this.errors = [];
-      const data = {
+      this.$store.dispatch('getToken',{
         email: this.email,
-        password: this.password
-      }
-      axios.post('/api/auth/login/',data)
+        password: this.password,
+      })
       .then(response => {
-        if(response.data.token){
-          localStorage.token = response.data.token;
-        }
-      }).catch(error => {
-        this.errors.push(error.response.data.error);
-      });
+        this.$store.dispatch('getUser')
+        .then(response => {
+          this.$router.push({ name:'home'})          
+        })
+      })
     }
   }
 }
