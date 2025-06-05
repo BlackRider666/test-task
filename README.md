@@ -16,11 +16,11 @@ This TODO list use:
 To install all dependencies and deploy this project local,you need fun the following command
 #### For old version of docker
 ```sh
-make up
+make install
 ```
 #### For new version of docker
 ```sh
-docker compose up -d
+make install-new
 ```
 ## Documentation 
 All API Documentation you can find [here](http://localhost/api/documentation) after deploy project locally.
