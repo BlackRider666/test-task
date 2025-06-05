@@ -1,0 +1,63 @@
+version: "3.7"
+services:
+  nginx_todo:
+    image: nginx:1.16-alpine
+    container_name: nginx_todo
+    restart: unless-stopped
+    ports:
+      - "80:80"
+#      - "443:443"
+    volumes:
+      - ./api:/var/www/api
+      - './docker/nginx/${APP_ENV}/:/etc/nginx/conf.d/'
+#      - ./docker/certs:/etc/nginx/certs
+    networks:
+      - todo_network
+    links:
+      - api_todo
+
+  db_todo:
+    image: mysql:8.0.31
+    container_name: db_todo
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: todo_app_db
+      MYSQL_ROOT_PASSWORD: todo_app_password
+      MYSQL_PASSWORD: todo_app_password
+      MYSQL_USER: todo_app_user
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - ./db_data:/var/lib/mysql
+      - ./docker/mysql:/etc/mysql/conf.d
+    networks:
+      - todo_network
+
+  api_todo:
+    build:
+      args:
+        user: admin
+        uid: 1000
+      context: ./docker
+      dockerfile: Dockerfile
+    tty: true
+    container_name: api_todo
+    restart: unless-stopped
+    working_dir: /var/www/api
+    volumes:
+      - ./api:/var/www/api
+    ports:
+      - "9000"
+    networks:
+      - todo_network
+    links:
+      - db_todo
+volumes:
+  db_data:
+
+networks:
+  todo_network:
+    driver: bridge
